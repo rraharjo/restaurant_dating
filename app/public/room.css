@@ -1,0 +1,369 @@
+:root {
+  --primary-color: #0A21C0;          /* Blue */
+  --primary-color-hover: #081CA1;    /* Darker Blue */
+  --secondary-color: #2C2E3A;        /* Green */
+  --secondary-color-hover: #444757;  /* Darker Green */
+  --background-color: rgba(255, 255, 255, .5);;       /* Light Grey */
+  --text-color: #141619;             /* Dark Grey */
+  --error-color: #e74c3c; 
+  --accent-color: #050A44; 
+  --accent-color-hover: #070e61;
+  --primary-button-color: #2C2E3A; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to left, var(--primary-color), var(--accent-color));
+    color: #e0e0e0;  
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    gap: 20px;
+    max-width: 2000px;
+    margin: 0 auto;
+    font-size: 20px;
+  }
+
+  form{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Layout Container (Flexbox for 3 columns) */
+  .container {
+    display: grid;
+    grid-template-columns: 24% 50% 24%; /* 3 equal columns */
+    grid-template-rows: 1fr 1fr; /* 2 rows of equal height */
+    grid-template-areas: 
+      "chatRoom middleColumn rightColumn"
+      "chatRoom middleColumn map";
+    gap: 20px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+  }
+  
+  /* Left Column (Chat Room) */
+  #chatRoom {
+    grid-area: chatRoom;  /* Assign to grid area 'chatRoom' */
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  #messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    word-wrap: break-word;
+    word-break: break-word;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, .5);  /* Dark background for the message area */
+    color: var(--text-color);  /* Light text color for messages */
+    border-radius: 5px;
+  }
+  
+  #messages div:nth-child(even) {
+    background-color: rgba(255, 255, 255, .5); 
+    padding: 5px;/* Slightly lighter gray for even messages */
+    border-radius: 5px;
+  }
+  
+  #messages div:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 1);
+    padding: 5px; /* Slightly darker gray for odd messages */
+    border-radius: 5px;
+  }
+  
+  #input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #555555;  /* Dark border color */
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, .5);  /* Dark background for input */
+    color: var(--text-color);  /* Light text color */
+  }
+  
+  #input:focus {
+    border-color: var(--primary-color);
+    border: 1px;
+    outline: none;
+  }
+  
+  /* Primary Button Styling */
+  button {
+    background-color: var(--primary-color);  /* Use the CSS variable */
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: var(--primary-color-hover);  /* Darker red on hover */
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Middle Column */
+  #middleColumn {
+    grid-area: middleColumn;  /* Assign to grid area 'middleColumn' */
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Right Column - Top Section */
+  #rightColumn {
+    grid-area: rightColumn;  /* Assign to grid area 'rightColumn' */
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    max-height: 34vh; /* Limit height for right column */
+  }
+
+/* Map - Bottom Section */
+  #map {
+    grid-area: map;  /* Assign to grid area 'map' */
+    min-width: 100%;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    max-height: 34vh; /* Limit height for map section */
+    overflow: hidden;
+  }
+
+  #rightColumn ul {
+    list-style: none;
+  }
+  
+  #rightColumn li {
+    padding: 10px;
+    border-bottom: 1px solid #444444;  /* Darker border between users */
+    color: #e0e0e0;  /* Light text color */
+  }
+  
+  #rightColumn li:last-child {
+    border-bottom: none;
+  }
+  
+  /* Voting Button - Centered Below the Middle Column */
+  #votingButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+  }
+  
+  #votingButton button {
+    width: 200px;
+    padding: 15px;
+    font-size: 18px;
+    background-color: var(--primary-color);  /* Use the CSS variable */
+    color: white;
+    border: 10px solid var(--background-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #votingButton button:hover {
+    background-color: var(--primary-color-hover);  /* Darker red on hover */
+  }
+  
+  #votingButton button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  #myRange {
+    width: 100%;
+  }
+
+  .slider_container {
+    width: 350px;
+  }
+  
+  /* Responsiveness for smaller screens */
+  @media screen and (max-width: 768px) {
+    .container {
+      flex-direction: column;  /* Stack the columns vertically */
+    }
+  
+    #chatRoom, #middleColumn, #rightColumn {
+      width: 100%;
+    }
+  }
+  
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  max-height: 425px;
+  overflow-y:scroll;
+  display:block;
+}
+
+thead th {
+  background-color: #333333;
+  color: #e0e0e0;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #444444;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #444444;
+  color: #e0e0e0;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #2a2a2a;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #1e1e1e;
+}
+
+tbody tr:hover {
+  background-color: #333333;
+}
+
+button.delete-button {
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button.delete-button:hover {
+  background-color: #c0392b;
+}
+
+#usersList{
+  color: var(--text-color);
+  overflow-y:scroll;
+  overflow: hidden;
+  max-height: 200px;
+}
+
+li{
+  color: var(--text-color);
+}
+
+#votingDone {
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+@keyframes rainbow {
+  0% { color: red; }
+  20% { color: orange; }
+  40% { color: yellow; }
+  60% { color: green; }
+  80% { color: blue; }
+  100% { color: indigo; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+#votingDone h2 {
+  display: inline-block;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  overflow: hidden; /* Ensure no overflow of the letters */
+}
+
+#votingDone h2 span {
+  display: inline-block;
+  animation: rainbow 1s infinite, float 2s ease-in-out infinite;
+}
+
+#votingDone h2 span:nth-child(1) {
+  animation-delay: 0s, 0s;
+}
+
+#votingDone h2 span:nth-child(2) {
+  animation-delay: 0.1s, 0.1s;
+}
+
+#votingDone h2 span:nth-child(3) {
+  animation-delay: 0.2s, 0.2s;
+}
+
+#votingDone h2 span:nth-child(4) {
+  animation-delay: 0.3s, 0.3s;
+}
+
+#votingDone h2 span:nth-child(5) {
+  animation-delay: 0.4s, 0.4s;
+}
+
+#votingDone h2 span:nth-child(6) {
+  animation-delay: 0.5s, 0.5s;
+}
+
+#votingDone ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#votingDone li {
+  background-color: rgba(255,255,255,0.1);
+  color: var(--text-color);
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#votingDone li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.2);
+}

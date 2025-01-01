@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+    <title>Create Lobby</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <center><h1>Create Lobby</h1></center>
+    
+    <!--List of all the options for food types. And send post to request of that information-->
+    <p>Choose a food type:</p>
+    <form id="createLobbyForm">
+        <input type="radio" id="option1" name="group1" value="American">
+        <label for="option1">American</label><br>
+
+        <input type="radio" id="option2" name="group1" value="Chinese">
+        <label for="option2">Chinese</label><br>
+
+        <input type="radio" id="option3" name="group1" value="French">
+        <label for="option3">French</label><br>
+
+        <input type="radio" id="option4" name="group1" value="Cafes">
+        <label for="option4">Cafes</label><br>
+
+        <input type="radio" id="option5" name="group1" value="Italian">
+        <label for="option5">Italian</label><br>
+
+        <input type="radio" id="option5" name="group1" value="Greek">
+        <label for="option5">Greek</label><br>
+
+        <input type="radio" id="option5" name="group1" value="Thai">
+        <label for="option5">Thai</label><br>
+
+        <input id="lobbyLocationField" type="text" placeholder="Location" required> 
+        <button class="button" id="sendButton" type="submit">Create Lobby</button>
+        <p id="errorMessage" class="error-message"></p>
+    </form>
+    <script src="createLobby.js"></script>
+
+</body>
+</html>

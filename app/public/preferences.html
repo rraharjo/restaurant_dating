@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferences</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        select, input {
+            display: block;
+            margin-bottom: 1em; /* Adds space below each element */
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="preferences-container">
+        <form>
+            <h1>What do you feel like eating?</h1>
+            
+            <label for="cuisine">Cuisine:</label>
+            <select id="cuisine" name="cuisine" required>
+                <option value="" disabled selected>Select a cuisine</option>
+                <option value="american">American</option>
+                <option value="italian">Italian</option>
+                <option value="mexican">Mexican</option>
+                <option value="asian">Asian</option>
+            </select>
+            
+
+            <label for="price">Price:</label>
+            <select id="price" name="price" required>
+                <option value="" disabled selected>Select a price range</option>
+                <option value="1">$</option>
+                <option value="2">$$</option>
+                <option value="3">$$$</option>
+                <option value="4">$$$$</option>
+            </select>
+
+            <label for="location">City:</label>
+            <input id="location" name="location" type="text" placeholder="Enter your city" required>
+            <label for="radius">How far you are willing to go:</label>
+            <input id="radius" name="radius" type="number" placeholder="Enter your radius" required>
+           
+        </form>
+        
+        <button id="submit"> Submit </button>
+
+
+    </div>
+    
+
+    <script src="preferences.js"></script>
+    
+</body>
+</html>

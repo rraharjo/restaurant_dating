@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Table Example</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #map {
+            height: 400px; /* The height is 400 pixels */
+            width: 50%; /* The width is the width of the web page */
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Restaurants</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Restaurant</th>
+                <th>Cuisine</th>
+                <th>Rating</th>
+                <th>Price</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+
+    <form id="address-form" action="" method="get" autocomplete="off">
+        <label class="full-field">
+            <!-- Avoid the word "address" in id, name, or label text to avoid browser autofill from conflicting with Place Autocomplete. Star or comment bug https://crbug.com/587466 to request Chromium to honor autocomplete="off" attribute. -->
+            <span class="form-label">Add restaurant</span>
+            <input id="res-address" name="res-address" required autocomplete="off" />
+        </label>
+    </form>
+    <h2>Locations: </h2>
+    <div id="map"></div>
+    <script>
+        /* Table */
+        const priceMapping = {
+            0: "",
+            1: "$",
+            2: "$$",
+            3: "$$$",
+            4: "$$$$"
+        };
+        const business = [];
+        
+        let url = "/nominations-call";
+        let rowId = 1;
+       
+
+        const renderTable = () => {
+            const tbody = document.getElementById("tbody");
+
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            };
+
+            business.map((row, idx) => {
+                const newRow = document.createElement("tr");
+
+                // Dynamically create and append cells
+                const cell = document.createElement("td");
+                cell.textContent = idx + 1;
+                newRow.appendChild(cell);
+
+                row.forEach((data) => {
+                    const cell = document.createElement("td");
+                    cell.textContent = data;
+                    newRow.appendChild(cell);
+                });
+
+                const removeCell = document.createElement("td");
+                const newButton = document.createElement("button");
+                newButton.textContent = "Delete";
+                newButton.addEventListener("click", removeRow.bind(null, idx));
+                removeCell.appendChild(newButton);
+                newRow.appendChild(removeCell);
+
+                tbody.appendChild(newRow);
+            });
+        }
+
+        const removeRow = (arrIndex) => {
+            business.splice(arrIndex, 1);
+            removeMarker(arrIndex);
+            renderTable();
+        }
+
+        async function serverCall() {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const body = await response.json();
+                const businesses = body.businesses;
+
+                const coordinates = [];
+                businesses.forEach((bus) => {
+                    const {
+                        name,
+                        coordinates: { latitude: lat_bus, longitude: long_bus },
+                        categories,
+                        rating,
+                        price,
+                        location: { display_address },
+                    } = bus;
+
+                    const cat = categories[0]?.title || "N/A"; // Safely access category
+                    const combined_loc = display_address.join(", "); 
+                    
+                    const mark = {
+                        position: { lat: lat_bus, lng: long_bus },
+                        title: name,
+                    };
+
+                    coordinates.push(mark); // Push marker coordinates
+                    const rowData = [name, cat, rating, price, combined_loc];
+                    business.push(rowData); // Add row data to `business` array
+                });
+
+                renderTable(); // Render the table after data processing
+                return coordinates; // Return the coordinates array
+            } catch (error) {
+                console.error("Fetch error:", error);
+                return []; // Return an empty array on error
+            }
+        }
+        
+
+        /* Google Maps autocomplete */
+
+        let map; // Declare map globally
+        let autocomplete;
+        let address1Field;
+        let markersArray = [];
+
+
+        const initAutocomplete = () => {
+            address1Field = document.querySelector("#res-address");
+            const googleMapAutoOption = {
+                componentRestrictions: { country: ["us"] },
+                fields: ["name", "formatted_address", "geometry", "rating", "price_level"],
+                types: ["restaurant", "cafe"],
+            };
+            autocomplete = new google.maps.places.Autocomplete(address1Field, googleMapAutoOption);
+            address1Field.focus();
+            autocomplete.addListener("place_changed", fillInAddress);
+        };
+
+        const fillInAddress = () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.error("No geometry available for this place.");
+                return;
+            }
+
+            const rowData = [place.name, "user-inserted", place.rating, priceMapping[place.price_level], place.formatted_address];
+            business.push(rowData);
+
+            const mark = {
+                position: { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() },
+                title: place.name,
+            };
+
+            addMarker(mark); // Add marker
+            renderTable();
+        };
+
+        async function initMap() {
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+            const local_coordinates = await serverCall();
+
+            map = new Map(document.getElementById("map"), {
+                center: { lat: 39.9526, lng: -75.16522 },
+                zoom: 12,
+                mapId: "6747d039df5a2bde",
+            });
+
+            for (const coord of local_coordinates) {
+                addMarker(coord); // Add markers from server call
+            }
+        }
+
+        function addMarker(coord) {
+            const marker = new google.maps.marker.AdvancedMarkerElement({
+                map: map,
+                position: coord.position,
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: coord.title,
+            });
+
+            marker.element.addEventListener("click", function () {
+                infoWindow.open(map, marker);
+            });
+
+            markersArray.push(marker);
+        }
+
+        function removeMarker(index) {
+            if (index >= 0 && index < markersArray.length && markersArray[index]) {
+                markersArray[index].setMap(null);
+                markersArray.splice(index, 1);
+            } else {
+                console.error("Invalid marker index");
+            }
+        }
+
+        function initialize() {
+        // Call both initializers within the single callback
+            initMap();
+            initAutocomplete();
+        }
+
+       
+        
+    </script>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&v=weekly&callback=initialize"
+        async
+        defer></script>
+
+</body>
+
+</html>

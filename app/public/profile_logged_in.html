@@ -1,0 +1,75 @@
+<!--Dynamic html page-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <div class="profile-container">
+        <img src=<%=pic %> alt="Profile Picture">
+        <br>
+        <h3>Upload profile picture</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="fileInput" name="file" required />
+            <input type="hidden" id="usernameInput" name="username" value="<%= name %>" />
+            <button type="submit">Upload</button>
+          </form>
+        <h2>
+            <%= name %>
+        </h2>
+        <div class="info">
+            <div>
+                <label>username:</label>
+                <span>
+                    <%= name %>
+                </span>
+            </div>
+            <div>
+                <label>
+                    My top-three places
+                </label>
+                <ul>
+                    <% for (var i=0 ; i < favs.length ; i++) {%>
+                        <li>
+                            <%= favs[i].res_name %>
+                        </li>
+                        <%}%>
+                </ul>
+            </div>
+            <div>
+                <a href="/create.html"><label>Back</label></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById("uploadForm");
+
+        form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const data = new FormData(form);
+        const username = document.getElementById('usernameInput').value; 
+        data.append("username", username);
+
+        let response = await fetch("/profile_pic", {
+            method: "POST",
+            body: data,
+        });
+
+        if (response.ok) {
+            let result = await response.json();
+            console.log(result);
+        }
+
+        location.reload();
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>CS375 Group 1 - Home</title>
+</head>
+<body>
+    <h1 class="center header">helpyourgirlfriendpickarestaurant.com</h1> 
+    <div class="center">
+        <div class="background-card">
+            <div class="card-content">
+                <h2>Need help picking a restaurant?</h2>
+                <h2>We got you covered</h2>
+            </div>
+            <br>
+            <div class="menu-header"><h2>Select an item off our menu:</h2></div>
+            <br>
+            <button class="button" id="login">Log In</button>
+            <br>
+            <button class="button" id="signup">Sign Up</button>
+            <br>
+            <button class="button guest-button" id="guest">Join as Guest</button>
+            <br>
+            <div class="disclaimer center">
+                <h6>While this website is proven to help improve your relationship by making meal decision
+                    easier, we cannot guarantee any assitance in finding a relationship. <br> Good luck out there.
+                </h6>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let login = document.getElementById("login");
+        let signUp = document.getElementById("signup");
+        let guestButton = document.getElementById("guest");
+
+        login.addEventListener("click", () => {
+            window.location.href = 'login.html';
+        });
+
+        signUp.addEventListener("click", () => {
+            window.location.href = 'signup.html';
+        });
+
+        guestButton.addEventListener("click", () => {
+            window.location.href = 'join.html';
+        });
+    </script>
+
+</body>
+</html>

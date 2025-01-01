@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/room.css">
+  <title>Demo</title>
+  <style>
+    #map {
+      height: 400px; /* The height is 400 pixels */
+      width: 50%; /* The width is the width of the web page */
+    }
+ </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="chatRoom">
+      <div id="messages">
+      </div>
+      <input id="input" type="text" placeholder="Type your message...">
+      <button id="send">Send</button>
+    </div>
+
+    <div id="middleColumn">
+      <div id="host-preferences" style="display: none;">
+        <form>
+          <h1>What do you feel like eating?</h1>
+          <br>
+          <label for="cuisine">Cuisine:</label>
+          <select id="cuisine" name="cuisine" required>
+            <option value="" disabled selected>Select a cuisine</option>
+            <option value="american">American</option>
+            <option value="italian">Italian</option>
+            <option value="mexican">Mexican</option>
+            <option value="asian">Asian</option>
+          </select>
+          <br><br>
+  
+          <label for="price">Price:</label>
+          <select id="price" name="price" required>
+            <option value="" disabled selected>Select a price range</option>
+            <option value="1">$</option>
+            <option value="2">$$</option>
+            <option value="3">$$$</option>
+            <option value="4">$$$$</option>
+          </select>
+          <br><br>
+  
+          <label for="location">City:</label>
+          <input id="location" name="location" type="text" placeholder="Enter your city" required>
+          <br><br>
+  
+          <label for="radius">How far you are willing to go:</label>
+          <input id="radius" name="radius" type="number" placeholder="Enter your radius" required>
+          <br><br>
+          <label for="yesNoDropdown">Would you like to filter by rating? </label>
+          <select id="yesNoDropdown" name="yesNoDropdown">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+          <br><br>
+          <div id="ratingField" style="display:none;">
+            <label for="ratingSelect">Select Rating:</label>
+            <select id="ratingSelect">
+              <option value="4.5">4.5 or higher</option>
+              <option value="4.0">4 or higher</option>
+              <option value="3.5">3.5 or higher</option>
+            </select>
+          </div>
+        </form>
+        <br>
+        <button id="preferences-submit">Submit</button>
+      </div>
+      <div id="restaurantTable"></div>
+      <div id="votingSection"></div>
+      <div id="drivingTable" style="display: none; overflow: hidden">
+        <p>Each users distance to restaurant</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Distance (time) </th>
+            </tr>
+          </thead>
+          <tbody id="bodyDistance"></tbody>
+        </table>
+      </div>
+      <div id="roomCode"></div>
+      <div id="votingDone"></div>
+      <div id="winSection"></div>
+    </div>
+    <div id="rightColumn">
+      <div id="columnInfo">
+        <div id="rightColumnHeader"><h1>Users Joined</h1></div>
+        <div id="usersList"></div>
+        <div id="votingResults"></div>
+        
+      </div>
+    </div>
+    <br>
+    <div id="map" style="display: none;"></div>
+  </div>
+  <div id="votingButton">
+    <button id="startVote">Start Vote</button>
+  </div>
+
+  <script src="/socket.io.js"></script>
+  <script src="/room.js" defer></script>
+</body>
+
+</html>
