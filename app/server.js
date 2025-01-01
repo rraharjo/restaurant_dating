@@ -126,7 +126,6 @@ app.post('/login', async (req, res) => {
     }
 
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
@@ -146,11 +145,8 @@ app.post('/guest-username', (req, res) => {
   // add UserLocation to room Obj
 
   const userLocation = req.body.userData;
-  //console.log(userLocation);
   const roomID = req.body.id;
-  console.log("USERS"); 
   rooms[roomID].userLocations.push(userLocation);
-  console.log(rooms[roomID].userLocations);
   req.session.authenticated = true;
   req.session.guestname = username;
   req.session.save()
@@ -212,7 +208,6 @@ app.get("/nomination", (_, res) => {
 app.get('/sendYelp', async (req, res) => {
   try {
     const { cuisine, price, city, radius, roomID, rating } = req.query;
-    console.log({ cuisine, price, city, radius, roomID, rating })
     if (!cuisine || !price || !city || !radius || !roomID || !rating) {
       return res.status(400).json({ error: "Missing required parameters" });
     }
@@ -224,14 +219,12 @@ app.get('/sendYelp', async (req, res) => {
       radius: radius,
       rating: rating
     };
-    //console.log(preferences);
 
     const yelpResponse = await sendYelp(preferences, roomID);
     rooms[roomID].restaurants = getRestaurantsForVote(roomID);
     let resturantData = rooms[roomID].restaurants;
     let leaderLoc = rooms[roomID].leaderLocation;
     let userLocs = rooms[roomID].userLocations;
-    console.log(userLocs);
 
     for (let s of Object.values(rooms[roomID].sockets)) {
       s.emit('nominations', { restaurants: resturantData, leaderLocation: leaderLoc, userLocation: userLocs });
@@ -281,7 +274,6 @@ function sendYelp(pref, roomID) {
           let bus_rating = business.rating;
 
           if (bus_rating > rating) {
-            //console.log(business);
             restaurantData[name] = {
               yelp: {
                 price: business.price,
@@ -304,13 +296,11 @@ function sendYelp(pref, roomID) {
 
         // Update the currentRoom's restaurant data
         currentRoom.restaurants = restaurantData;
-        console.log(`Updated room ${roomID} with Yelp restaurant data.`);
 
         // Resolve the promise with the restaurant data
         resolve(restaurantData);
       })
       .catch((error) => {
-        console.log(error);
         console.error(`Error fetching Yelp data: ${error.message}`);
         reject(error); // Reject the promise if the request fails
       });
@@ -391,7 +381,6 @@ function sendGoogle(pref, roomID) {
     })
     .then((finalRestaurants) => {
       // Handle final data
-      console.log(`Updated restaurants for room ${roomID}:`, finalRestaurants);
       generateRestaurants(finalRestaurants); // Custom function to process the data
       return finalRestaurants; // Optional return
     })
@@ -791,7 +780,6 @@ io.on('connection', (socket) => {
       username: clientUsername || socket.handshake.session.guestname || "GUEST",
       message: message
     }
-    console.log(messageObj)
 
     for (let [socketId, otherSocket] of Object.entries(rooms[roomId].sockets)) {
       if (otherSocket.id === socket.id) continue;
@@ -854,7 +842,6 @@ function getRestaurantsForVote(roomId) {
       coordinates: details.yelp.coordinates,
       menu: details.yelp.attributes.menu_url,
     });
-    console.log("MENU: " + details.yelp.attributes.menu_url)
   });
 
   return restaurants;
@@ -871,26 +858,19 @@ async function getDrivingDistance(roomID) {
       coordinates: details.coordinates // coordinates = {latitude: val, longitude: val}
     });
   });
-  console.log("these are the cords");
-  console.log(restCoordinates);
   // Prepare destination coordinates
   let destination_url = restCoordinates
     .map(cord => `${cord.coordinates.latitude},${cord.coordinates.longitude}`)
     .join("|");
-  console.log("this is the users object");
-  console.log(rooms[roomID].users);
   let userOBJ = rooms[roomID].users;
   let usernames = []
   userOBJ.forEach((user) => {
-    console.log(user.username);
     usernames.push(user.username);
   })
   // Prepare user locations and leader location
   let users = rooms[roomID].userLocations;
   let leader = rooms[roomID].leaderLocation;
   let origin_url = `${leader.lat},${leader.lon}`;  // Leader location
-  console.log(users);
-  console.log(usernames);
   // Add user locations to the origin_url
   users.forEach(user => {
     if (user.lat !== null && user.lon !== null) {
@@ -904,7 +884,6 @@ async function getDrivingDistance(roomID) {
     `destinations=${destination_url}&` +
     `units=imperial&` +
     `key=${googleKey}`;
-  console.log(url);
   try {
     // Make the API request
     const response = await axios.get(url);
@@ -929,8 +908,6 @@ async function getDrivingDistance(roomID) {
           }
         });
       }
-      console.log("This is the time distance from each user to each restaurant");
-      console.log(timeContainer);
       // Return the constructed timeContainer
       return timeContainer;
     } else {

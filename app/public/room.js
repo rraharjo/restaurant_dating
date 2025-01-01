@@ -55,7 +55,6 @@ button.addEventListener("click", () => {
   if (message === "") {
     return;
   }
-  console.log("Sending message:", message);
   socket.emit("foo", { message, clientUsername });
   input.value = "";
   appendMessage({ username: clientUsername, message: message });
@@ -79,7 +78,6 @@ let roomId = pathParts[pathParts.length - 1];
 
 let roomURL = `/getRoomObj/?id=${roomId}`;
 let roomObj = {};
-console.log(roomId); 
 let code = document.getElementById("roomCode");
 let roomNumber = document.createElement("h2");
 roomNumber.textContent = `Share your room code: ${roomId}`;
@@ -111,6 +109,11 @@ var restaurants = []
 socket.on('startVoting', (data) => {
   const drivingTime = data.times;
   restaurants = data.restaurants;
+  if (restaurants?.length == 0){
+    document.getElementById("noRestaurantError").setAttribute("style", "display: block; align-items: center;");
+    return;
+  }
+  document.getElementById("noRestaurantError").setAttribute("style", "display: none; align-items: center;");
   let currentIndex = 0;
   let userVotes = {};
   let submittedVote = false;
@@ -179,7 +182,6 @@ socket.on('startVoting', (data) => {
     let location = restaurant.location
     let phone = restaurant.phone
     let menuLink = restaurant.menu
-    console.log(menuLink)
 
     let priceElement = document.createElement("h4")
     priceElement.textContent = "Price: " + price
@@ -534,7 +536,6 @@ socket.on("nominations", (data) => {
 
   let userLocations = data.userLocation;
   addCustomMarker({ position: { lat: leaderLocation.lat, lng: leaderLocation.lon }, title: "Leader" }, map);
-  console.log(userLocations);
 
   for(a of userLocations){
     let lat = a.lat;

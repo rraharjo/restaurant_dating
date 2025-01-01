@@ -1,0 +1,11 @@
+{
+    "username": "",
+    "pass": "",
+    "host": "localhost",
+    "port": 5432,
+    "database": "cs375_group_one",
+    "yelp_key" : "",
+    "client_id": "",
+    "google_key": "",
+    "yelp_url" : "https://api.yelp.com/v3/businesses/search?"
+}
